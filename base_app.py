@@ -179,7 +179,7 @@ def main():
     if selection == "Home Page":
         st.markdown('')
     elif selection == "About Classifier App":
-        st.subheader("Learn How to us the Classifier App")
+        st.subheader("About Classifier App")
     elif selection == "Prediction by Text":
         st.subheader("Prediction by Text")
     elif selection == "Data Exploration":
@@ -203,17 +203,15 @@ def main():
 
     if selection == "About Classifier App":
         #st.info("This section explains what this app does and how to use it.")
-        st.write("""This app was primarily created for tweets expressing belief in climate change. There are seven pages in the app, 
+        st.write("""
+                This app was primarily created for tweets expressing belief in climate change. There are seven pages in the app, 
                 including the home page, information about classifier apps, predictions by text and files uploaded, data exploration, 
                 company profiles, and team information.
-
-                Home Page: The home page is the app's landing page and includes a welcome message and a succinct summary of the app.
-
-                Classifier App: Information The page you are on right now is this one. It includes a detailed explanation of the app as 
-                well as usage guidelines.
-
-                Text Prediction: To make a text prediction, enter any text in the textbox underneath the section and press the 
-                "Predict" button.""")
+                - **`Home Page`**: The home page is the app's landing page and includes a welcome message and a succinct summary of the app.
+                - **`About Classifier App`**: The page you are on right now is this one. It includes a detailed explanation of the app as well as usage guidelines.
+                - **`Prediction by Text`**: You can predict the sentiment of a single tweet by typing or pasting it on the text prediction page. Enter any text in the textbox beneath the section, then click "Predict" to make a single tweet prediction.
+                - **`Prediction by File Upload`**: You can make sentiment predictions for batches of tweets using this section. It can process multiple tweets in a batch from a `one-column.csv` file and categorize them into different tweet sentiment groups. To predict by file up, click on the `browse file` button to upload your file, then click on process to do prediction. A thorough output of the prediction will be provided, including a summary table and the number of tweets that were categorised under each sentiment class.
+                """)
         
     #Text Prediction page
     if selection == "Prediction by Text":
@@ -258,24 +256,24 @@ def main():
                     st.success("Text Categorized as: {}".format(sen))
 
             if prediction == 1:
-                st.write(""" **The tweet supports the belief of man-made climate change**""")
-                st.markdown(f'<img src="data:image/gif;base64,{data_url_happy}" alt="cat gif">',
-                            unsafe_allow_html=True)
+                st.write(""" **Pro: The tweet supports the belief of man-made climate change**""")
+                # st.markdown(f'<img src="data:image/gif;base64,{data_url_happy}" alt="cat gif">',
+                #             unsafe_allow_html=True)
             
             elif prediction == -1:
-                st.write("""**The tweet do not believe in man-made climate change**""")
-                st.markdown(f'<img src="data:image/gif;base64,{data_url_sad}" alt="cat gif">',
-                            unsafe_allow_html=True)
+                st.write("""**Anti: The tweet do not believe in man-made climate change**""")
+                # st.markdown(f'<img src="data:image/gif;base64,{data_url_sad}" alt="cat gif">',
+                #             unsafe_allow_html=True)
 
             elif prediction == 0:
-                st.write("""**The tweet neither supports nor refutes the belief of man-made climate change.**""")
-                st.markdown(f'<img src="data:image/gif;base64,{data_url_neutral}" alt="cat gif">',
-                            unsafe_allow_html=True)
+                st.write("""**Neutral: The tweet neither supports nor refutes the belief of man-made climate change.**""")
+                # st.markdown(f'<img src="data:image/gif;base64,{data_url_neutral}" alt="cat gif">',
+                #             unsafe_allow_html=True)
                 
             else:
-                st.write("""**The tweet links to factual news about climate change**""")
-                st.markdown(f'<img src="data:image/gif;base64,{data_url_news}" alt="cat gif">',
-                            unsafe_allow_html=True)
+                st.write("""**News: The tweet links to factual news about climate change**""")
+                # st.markdown(f'<img src="data:image/gif;base64,{data_url_news}" alt="cat gif">',
+                #             unsafe_allow_html=True)
    
     # Building About Team page
     if selection == "About Team":
@@ -299,14 +297,12 @@ def main():
 
             with st.expander("Brief Bio"):
                 st.write("""
-                Founder of TechNation.Inc. When it comes to personalizing your online store, nothing is more effective than 
-                an About Us page. This is a quick summary of your company's history and purpose, and should provide a clear overview of the 
-                company's brand story. A great About Us page can help tell your brand story, establish customer loyalty, and turn your bland 
-                ecommerce store into an well-loved brand icon. Most importantly, it will give your customers a reason to shop from your brand.
+                Lista Abutto is currently a senior website developer with a background in soft development, information systems security, 
+                digital marketing, and data science.  She has majorly worked in the medical, educational, government, and hospitality niches 
+                with both established and start-up companies. 
 
-                In this post, we'll give you three different ways to create a professional about us page for your online store, blog, or other 
-                website - use our about us page generator, use the fill-in-the-blank about us template below, or create your own custom page 
-                using the about us examples within this article.
+                She is currently pursuing a master's in business administration. 
+
                 """)
 
         with nnamdi:
@@ -396,7 +392,7 @@ def main():
 
     # Building out the prediction page
     if selection == "Prediction by File Upload":
-        st.info("Upload a 'one-column' csv file containing tweets of users about their believe on climate change and click on the 'Process' button below to classify the data into the various four various sentiment classes.")
+        st.info("Upload a `one-column` csv file of tweets to perform climate change sentiment analysis in batches")
 
         data_file = st.file_uploader("Upload CSV",type=['csv'])
         if st.button("Process"):
@@ -406,9 +402,27 @@ def main():
                 model_name = 'mlr_model_pipe.pkl'
                 predictor = joblib.load(open(os.path.join(model_name), "rb"))
                 prediction = predictor.predict(tweet_process)
-                table = st.table([pd.DataFrame(prediction).value_counts()])
-                                
-                st.success(table)
+                table = pd.DataFrame(prediction).value_counts()
+
+
+                dict_prediction = {'Sentiments': ['News', 'Pro-climate', 'Neutral', 'Anti-climate'], 'Predictions': [table[2], table[1], table[0], table[-1]]}               
+
+               
+                st.write("""
+                **The data uploaded contains {} number of tweets and classified into the following sentiments:**
+                - {} tweets are linked to factual news about climate change;
+                - {} tweets supports the belief of man-made climate change;
+                - {} tweets neither supports nor refutes the belief of man-made climate change;
+                - {} tweets does not believe in man-made climate change
+                """.format(df.shape[0], table[2], table[1], table[0], table[-1]))
+
+                st.info("See a summary table of the sentiment classification below:")
+                
+                pd_pred = pd.DataFrame(dict_prediction)
+                pd_pred
+
+               
+            
                 #plt.show()
                 #st.pyplot(fig, use_container_width=True) 
                 
