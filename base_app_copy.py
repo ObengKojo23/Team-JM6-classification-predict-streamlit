@@ -197,7 +197,6 @@ def main():
 
     if selection == "Home":
         st.markdown('')
-        st.subheader("Learn How to use the Classifier App")
 
     elif selection == "Prediction":
         st.subheader("Prediction")
@@ -206,34 +205,20 @@ def main():
         st.subheader("Exploration of Sentiment and Tweets")
 
     else:
-        st.subheader("About Team")
+        st.subheader('')
 
 
 
     #Landing page
     landing = Image.open("backgroundpix.png")
     if selection == "Home":
-        st.image(landing)#, height=1500)
-        # time.sleep(3)
-        # st.subheader("Text Classification App") 
-        # st.button("Go to next page")
-        st.write("""This app was primarily created for tweets expressing belief in climate change. There are seven pages in the app, 
-                including the home page, information about classifier apps, predictions by text and files uploaded, data exploration, 
-                company profiles, and team information.
-
-                Home Page: The home page is the app's landing page and includes a welcome message and a succinct summary of the app.
-
-                Classifier App: Information The page you are on right now is this one. It includes a detailed explanation of the app as 
-                well as usage guidelines.
-
-                Text Prediction: To make a text prediction, enter any text in the textbox underneath the section and press the 
-                "Predict" button.""")
+        st.image(landing)#, height=1500
 
     
     #Text Prediction page
     if selection == "Prediction":
         menu = ['Single Text Prediction', 'Batch Prediction']
-        type = st.sidebar.selectbox("Choose Prediction Type", menu)
+        type = st.sidebar.selectbox("Choose Prediction Type 👇", menu)
 
         if type == 'Single Text Prediction':
 
@@ -278,24 +263,24 @@ def main():
                         st.success("Text Categorized as: {}".format(sen))
 
                 if prediction == 1:
-                    st.write(""" **The tweet supports the belief of man-made climate change**""")
-                    st.markdown(f'<img src="data:image/gif;base64,{data_url_happy}" alt="cat gif">',
-                            unsafe_allow_html=True)
+                    st.info(""" **This tweet is categorized as Pro: The tweet supports the belief of man-made climate change**""")
+                    # st.markdown(f'<img src="data:image/gif;base64,{data_url_happy}" alt="cat gif">',
+                    #         unsafe_allow_html=True)
             
                 elif prediction == -1:
-                    st.write("""**The tweet do not believe in man-made climate change**""")
-                    st.markdown(f'<img src="data:image/gif;base64,{data_url_sad}" alt="cat gif">',
-                            unsafe_allow_html=True)
+                    st.info("""**This tweet is categorized as Anti: The tweet do not believe in man-made climate change**""")
+                    # st.markdown(f'<img src="data:image/gif;base64,{data_url_sad}" alt="cat gif">',
+                    #         unsafe_allow_html=True)
 
                 elif prediction == 0:
-                    st.write("""**The tweet neither supports nor refutes the belief of man-made climate change.**""")
-                    st.markdown(f'<img src="data:image/gif;base64,{data_url_neutral}" alt="cat gif">',
-                            unsafe_allow_html=True)
+                    st.info("""**This tweet is categorized as Neutral: The tweet neither supports nor refutes the belief of man-made climate change.**""")
+                    # st.markdown(f'<img src="data:image/gif;base64,{data_url_neutral}" alt="cat gif">',
+                    #         unsafe_allow_html=True)
                 
                 else:
-                    st.write("""**The tweet links to factual news about climate change**""")
-                    st.markdown(f'<img src="data:image/gif;base64,{data_url_news}" alt="cat gif">',
-                            unsafe_allow_html=True)
+                    st.info("""**This tweet is categorized as News: The tweet links to factual news about climate change**""")
+                    # st.markdown(f'<img src="data:image/gif;base64,{data_url_news}" alt="cat gif">',
+                    #         unsafe_allow_html=True)
         else:
             st.info("Upload a csv file containing 2 columns; 'tweetid', 'message'. Click on the 'Process' button below to classify the data into the various four various sentiment classes.")
 
@@ -307,131 +292,156 @@ def main():
                     model_name = 'mlr_model_pipe.pkl'
                     predictor = joblib.load(open(os.path.join(model_name), "rb"))
                     prediction = predictor.predict(tweet_process)
+                    table_2 = pd.DataFrame(prediction).value_counts()
                     sentiment_dict = {2: 'News', 1: 'Pro', 0: 'Neutral', -1:'Anti'}
                     Final_Table = {'tweetid': df.tweetid, 'sentiment': np.round(prediction, 0)}
                     pred_df = pd.DataFrame(data=Final_Table)
+                    dict_prediction = {'Sentiments': ['News', 'Pro-climate', 'Neutral', 'Anti-climate'], 
+                                        'Predictions': [table_2[2], table_2[1], table_2[0], table_2[-1]],
+                                        'Percentages of sentiments': [table_2[2]/table_2.sum(), table_2[1]/table_2.sum(), table_2[0]/table_2.sum(), table_2[-1]/table_2.sum()]}               
 
-                    table = st.table(pred_df['sentiment'].map(sentiment_dict).value_counts())
+                    # table = st.table(pred_df['sentiment'].map(sentiment_dict).value_counts())
+                    st.write("""
+                            **The data uploaded contains {} number of tweets and classified into the following sentiments:**
+                            - {} tweets are linked to factual news about climate change;
+                            - {} tweets supports the belief of man-made climate change;
+                            - {} tweets neither supports nor refutes the belief of man-made climate change;
+                            - {} tweets does not believe in man-made climate change
+                            """.format(df.shape[0], table_2[2], table_2[1], table_2[0], table_2[-1]))
+
+                    st.info("See a summary table of the sentiment classification below 👇:")
+                    pd_pred = pd.DataFrame(dict_prediction)
+                    pd_pred  
+
+                    st.info("See a bar chart showing the tweets sentiment classification below 👇:")
                     st.bar_chart(pred_df['sentiment'].map(sentiment_dict).value_counts())
-                                
-                    st.success(table)
+
+                    # st.success(table)
 
    
     # Building About Team page
     if selection == "About":
+        menu = ['Documentation', 'About Team']
+        type = st.sidebar.selectbox("Choose what you want to learn about 👇", menu)
 
-        st.markdown(" ")
-        lista_pic = Image.open("Lista.png")
-        nnamdi_pic = Image.open("Nnamdi.jpg")
-        othuke_pic = Image.open("Othuke.jpg")
-        valentine_pics = Image.open("valentine.jpg")
-        humphrey_pics = Image.open("humphrey.jpg")
-        emmanuel_pics = Image.open("emmanuel.jpg")
-
-
-        st.header("Lista - Founder")
-        lista, text1 = st.columns((1,2))
-    
-        with lista:
-            st.image(lista_pic)
-
-        with text1:
+        if type == 'Documentation':
+            st.subheader("**App Documentation**: Learn How to use the Classifier App")
+            # time.sleep(3)
+            # st.subheader("Text Classification App") 
+            # st.button("Go to next page")
             st.write("""
-                Founder of TechNation.Inc. When it comes to personalizing your online store, nothing is more effective than 
-                an About Us page. This is a quick summary of your company's history and purpose, and should provide a clear overview of the 
-                company's brand story. A great About Us page can help tell your brand story, establish customer loyalty, and turn your bland 
-                ecommerce store into an well-loved brand icon. Most importantly, it will give your customers a reason to shop from your brand.
-
-                In this post, we'll give you three different ways to create a professional about us page for your online store, blog, or other 
-                website - use our about us page generator, use the fill-in-the-blank about us template below, or create your own custom page 
-                using the about us examples within this article.
-                """)
-
-        st.header("Nnamdi - Product Manager")
-        nnamdi, text2 = st.columns((1,2))
-        
-        with nnamdi:
-            st.image(nnamdi_pic)
-
-        with text2:
+                    This app was primarily created for tweets expressing belief in climate change. There are seven pages in the app, 
+                    including the home page, information about classifier apps, predictions by text and files uploaded, data exploration, 
+                    company profiles, and team information.
+                    - **`Home Page`**: The home page is the app's landing page and includes a welcome message and a succinct summary of the app.
+                    - **`About Classifier App`**: The page you are on right now is this one. It includes a detailed explanation of the app as well as usage guidelines.
+                    - **`Prediction by Text`**: You can predict the sentiment of a single tweet by typing or pasting it on the text prediction page. Enter any text in the textbox beneath the section, then click "Predict" to make a single tweet prediction.
+                    - **`Prediction by File Upload`**: You can make sentiment predictions for batches of tweets using this section. It can process multiple tweets in a batch from a `.csv` file with at least two columns named `message` and `tweetid` and categorize them into different tweet sentiment groups. To predict by file up, click on the `browse file` button to upload your file, then click on process to do prediction. A thorough output of the prediction will be provided, including a summary table and the number of tweets that were categorised under each sentiment class.
+                    See sample of the csv file to be uploaded below 👇: 
+                    """)
+            csv = Image.open("csv_sample.jpg")
+            st.image(csv)
             st.write("""
-                Nnamdi is a senior product manager with extensive expertise creating high-quality software and a background in user 
-                experience design. He has expertise in creating and scaling high-quality products. He has been able to coordinate 
-                across functional teams, work through models, visualizations, prototypes, and requirements thanks to his attention to detail.
-                
-                He frequently collaborates with data scientists, data engineers, creatives, and other professionals with a focus on business. 
-                He has acquired expertise in engineering, entrepreneurship, conversion optimization, online marketing, and user experience. 
-                He has gained a profound insight of the customer journey and the product lifecycle thanks to that experience.
-                """)
+                    - **`EDA`**: The EDA section, which stands for Explanatory Data Analysis, gives you the chance to explore your data. Based on the number of hash-tags and mentions in the tweet that have been gathered, it also displays graphs of various groups of words in the dataset, giving you a better understanding of the data you are working with.
+            """)
         
-        st.header("Othuke - Chief Machine Learning Engineer")
-        othuke, text3 = st.columns((1, 2))
+        else:
+            st.subheader("About Team")
+            st.markdown(" ")
+            lista_pic = Image.open("Lista.png")
+            nnamdi_pic = Image.open("Nnamdi.jpg")
+            othuke_pic = Image.open("Othuke.jpg")
+            valentine_pics = Image.open("valentine.jpg")
+            humphrey_pics = Image.open("humphrey.jpg")
+            emmanuel_pics = Image.open("emmanuel.jpg")
+
+
+            st.header("Lista - Founder")
+            lista, text1 = st.columns((1,2))
         
-        with othuke:
-            st.image(othuke_pic)
+            with lista:
+                st.image(lista_pic)
 
-        with text3:
-            st.write("""
-                Othuke is a Senor Machine Learning engineer When it comes to personalizing your online store, nothing is more effective than 
-                an About Us page. This is a quick summary of your company's history and purpose, and should provide a clear overview of the 
-                company's brand story. A great About Us page can help tell your brand story, establish customer loyalty, and turn your bland 
-                ecommerce store into an well-loved brand icon. Most importantly, it will give your customers a reason to shop from your brand.
-
-                In this post, we'll give you three different ways to create a professional about us page for your online store, blog, or other 
-                website - use our about us page generator, use the fill-in-the-blank about us template below, or create your own custom page 
-                using the about us examples within this article.
-                """)
-
-        st.header("Okechukwu - Lead Strategist")
-        valentine, text4 = st.columns((1,2))
-                
-
-        with valentine:
-            st.image(valentine_pics)
-
-            with text4:
+            with text1:
                 st.write("""
-                Okechukwu When it comes to personalizing your online store, nothing is more effective than 
-                an About Us page. This is a quick summary of your company's history and purpose, and should provide a clear overview of the 
-                company's brand story. A great About Us page can help tell your brand story, establish customer loyalty, and turn your bland 
-                ecommerce store into an well-loved brand icon. Most importantly, it will give your customers a reason to shop from your brand.
+                    Lista Abutto is the Founder of Nonnel Data Solution Ltd. she is currently a senior website developer with a background in 
+                    soft development, information systems security, digital marketing, and data science.  She has majorly worked in the medical, 
+                    educational, government, and hospitality niches with both established and start-up companies. 
 
-                In this post, we'll give you three different ways to create a professional about us page for your online store, blog, or other 
-                website - use our about us page generator, use the fill-in-the-blank about us template below, or create your own custom page 
-                using the about us examples within this article.
-                """)
+                    She is currently pursuing a master's in business administration. 
+                    """)
 
-        st.header("Humphrey - Data Scientist")
-        humphrey, text5 = st.columns((1,2))
-        
-        
-        with humphrey:
-            st.image(humphrey_pics)
+            st.header("Nnamdi - Product Manager")
+            nnamdi, text2 = st.columns((1,2))
+            
+            with nnamdi:
+                st.image(nnamdi_pic)
 
-        with text5:
-            st.write("""
-                Humphery (Osas) Ojo,  an enthusiastic Data Scientist with great euphoria for Exploratory Data Analysis
-                (Power-BI, Tableau, Excel, SQL, Python, R) and Machine Learning Engineering(Supervised and Unsupervised Learning), 
-                mid-level proficiency in Front-End Web Development(HTML, CSS, MVC, RAZOR, C#).
-                """)
+            with text2:
+                st.write("""
+                    Nnamdi is a senior product manager with extensive expertise creating high-quality software and a background in user 
+                    experience design. He has expertise in creating and scaling high-quality products. He has been able to coordinate 
+                    across functional teams, work through models, visualizations, prototypes, and requirements thanks to his attention to detail.
+                    
+                    He frequently collaborates with data scientists, data engineers, creatives, and other professionals with a focus on business. 
+                    He has acquired expertise in engineering, entrepreneurship, conversion optimization, online marketing, and user experience. 
+                    He has gained a profound insight of the customer journey and the product lifecycle thanks to that experience.
+                    """)
+            
+            st.header("Othuke - Chief Machine Learning Engineer")
+            othuke, text3 = st.columns((1, 2))
+            
+            with othuke:
+                st.image(othuke_pic)
 
-        st.header("Emmanuel - Customer Success")
-        emmanuel, text6 = st.columns((1,2))
-        
-        with emmanuel:
-            st.image(emmanuel_pics)
+            with text3:
+                st.write("""
+                    Othuke is a Senor Machine Learning engineer When it comes to personalizing your online store, nothing is more effective than 
+                    an About Us page. This is a quick summary of your company's history and purpose, and should provide a clear overview of the 
+                    company's brand story. A great About Us page can help tell your brand story, establish customer loyalty, and turn your bland 
+                    ecommerce store into an well-loved brand icon. Most importantly, it will give your customers a reason to shop from your brand.
+                    """)
 
-        with text6:
-            st.write("""
-                Emmanuel When it comes to personalizing your online store, nothing is more effective than 
-                an About Us page. This is a quick summary of your company's history and purpose, and should provide a clear overview of the 
-                company's brand story. A great About Us page can help tell your brand story, establish customer loyalty, and turn your bland 
-                ecommerce store into an well-loved brand icon. Most importantly, it will give your customers a reason to shop from your brand.
+            st.header("Okechukwu - Lead Strategist")
+            valentine, text4 = st.columns((1,2))
+                    
 
-                In this post, we'll give you three different ways to create a professional about us page for your online store, blog, or other 
-                website - use our about us page generator, use the fill-in-the-blank about us template below, or create your own custom page 
-                using the about us examples within this article.
-                """)
+            with valentine:
+                st.image(valentine_pics)
+
+                with text4:
+                    st.write("""
+                    Njoku Okechukwu Valentine, a passionate problem solver armed with critical thinking with proficiency in Excel, Powerbi, 
+                    SQL and Data science and Machine Learning using Python based technologies. Mid-level Flask Developer, and automation engineer.
+                    """)
+
+            st.header("Humphrey - Data Scientist")
+            humphrey, text5 = st.columns((1,2))
+            
+            
+            with humphrey:
+                st.image(humphrey_pics)
+
+            with text5:
+                st.write("""
+                    Humphery (Osas) Ojo,  an enthusiastic Data Scientist with great euphoria for Exploratory Data Analysis
+                    (Power-BI, Tableau, Excel, SQL, Python, R) and Machine Learning Engineering(Supervised and Unsupervised Learning), 
+                    mid-level proficiency in Front-End Web Development(HTML, CSS, MVC, RAZOR, C#).
+                    """)
+
+            st.header("Emmanuel - Customer Success")
+            emmanuel, text6 = st.columns((1,2))
+            
+            with emmanuel:
+                st.image(emmanuel_pics)
+
+            with text6:
+                st.write("""
+                    Emmanuel When it comes to personalizing your online store, nothing is more effective than 
+                    an About Us page. This is a quick summary of your company's history and purpose, and should provide a clear overview of the 
+                    company's brand story. A great About Us page can help tell your brand story, establish customer loyalty, and turn your bland 
+                    ecommerce store into an well-loved brand icon. Most importantly, it will give your customers a reason to shop from your brand.
+                    """)
 
 
                 

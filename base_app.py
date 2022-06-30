@@ -351,14 +351,8 @@ def main():
 
             with st.expander("Brief Bio"):
                 st.write("""
-                Okechukwu When it comes to personalizing your online store, nothing is more effective than 
-                an About Us page. This is a quick summary of your company's history and purpose, and should provide a clear overview of the 
-                company's brand story. A great About Us page can help tell your brand story, establish customer loyalty, and turn your bland 
-                ecommerce store into an well-loved brand icon. Most importantly, it will give your customers a reason to shop from your brand.
-
-                In this post, we'll give you three different ways to create a professional about us page for your online store, blog, or other 
-                website - use our about us page generator, use the fill-in-the-blank about us template below, or create your own custom page 
-                using the about us examples within this article.
+                Njoku Okechukwu Valentine, a passionate problem solver armed with critical thinking with proficiency in Excel, Powerbi, 
+                SQL and Data science and Machine Learning using Python based technologies. Mid-level Flask Developer, and automation engineer.
                 """)
 
         with humphrey:
