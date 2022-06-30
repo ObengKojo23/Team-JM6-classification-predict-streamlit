@@ -318,7 +318,7 @@ def main():
 
    
     # Building About Team page
-    if selection == "About Team":
+    if selection == "About":
 
         st.markdown(" ")
         lista_pic = Image.open("Lista.png")
