@@ -163,7 +163,7 @@ file_neutral.close()
 # The main function where we will build the actual app
 def main():
     """Tweet Classifier App with Streamlit """
-    st.set_page_config(page_title="Classifier App", page_icon=":hash:")
+    st.set_page_config(page_title="Classifier App", page_icon=":hash:", )
 
     # Creates a main title and subheader on your page -
     logo = Image.open("resources/imgs/tweet_logo.png")
@@ -383,7 +383,7 @@ The multinomial Naive Bayes classifier is suitable for classification with discr
                     
                     See sample of the csv file to be uploaded below 👇: 
                     """)
-            csv = Image.open("resources/imgs/csv_sample.jpg")
+            csv = Image.open("resources/imgs/csv_sample.png")
             st.image(csv)
 
             st.write("""
